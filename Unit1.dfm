@@ -2732,6 +2732,7 @@ object FTelaInicial: TFTelaInicial
     Top = 481
     Width = 142
     Height = 33
+    Alignment = taCenter
     Caption = 'Pontua'#231#227'o: '
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -2745,41 +2746,47 @@ object FTelaInicial: TFTelaInicial
     Top = 481
     Width = 8
     Height = 33
+    Alignment = taCenter
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -27
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-  end
-  object StaticText1: TStaticText
-    Left = 680
-    Top = 481
-    Width = 289
-    Height = 144
-    Caption = 
-      'Use as setas do teclado para direcionar o Carro para direita e p' +
-      'ara a esquerda'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -27
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-    TabOrder = 0
   end
   object Memo1: TMemo
-    Left = 240
-    Top = 481
-    Width = 185
-    Height = 89
+    Left = 24
+    Top = 520
+    Width = 200
+    Height = 120
+    Alignment = taCenter
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -27
     Font.Name = 'Tahoma'
     Font.Style = []
     Lines.Strings = (
-      'Memo1')
+      'N'#227'o encoste '
+      'nos carros '
+      'inimigos')
+    ParentFont = False
+    TabOrder = 0
+  end
+  object Memo2: TMemo
+    Left = 300
+    Top = 520
+    Width = 400
+    Height = 120
+    Alignment = taCenter
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Lines.Strings = (
+      'Use as setas do teclado para '
+      'direcionar o Carro para direita e '
+      'para a esquerda')
     ParentFont = False
     TabOrder = 1
   end
