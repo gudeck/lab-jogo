@@ -1,15 +1,19 @@
 object FTelaInicial: TFTelaInicial
   Left = 0
   Top = 0
+  Margins.Left = 0
+  Margins.Top = 0
+  Margins.Right = 0
+  Margins.Bottom = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Corrida'
-  ClientHeight = 471
+  ClientHeight = 721
   ClientWidth = 994
-  Color = clBtnFace
-  Constraints.MaxHeight = 500
+  Color = clWhite
+  Constraints.MaxHeight = 750
   Constraints.MaxWidth = 1000
-  Constraints.MinHeight = 500
+  Constraints.MinHeight = 750
   Constraints.MinWidth = 1000
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -24,9 +28,8 @@ object FTelaInicial: TFTelaInicial
   object ImagemFundo: TImage
     Left = 0
     Top = 0
-    Width = 994
-    Height = 471
-    Align = alClient
+    Width = 1000
+    Height = 475
     Picture.Data = {
       0A544A504547496D6167651F4E0100FFD8FFE000104A46494600010100000100
       010000FFE1006C45786966000049492A00080000000300310102000700000032
@@ -2703,7 +2706,82 @@ object FTelaInicial: TFTelaInicial
       596A0A96580A96582896580A965A0A816A289620A216A28965828965A0A2580A
       25960A25960A25960A25960FFFD9}
     Stretch = True
-    ExplicitWidth = 1000
+  end
+  object FimJogo: TLabel
+    Left = 50
+    Top = 150
+    Width = 900
+    Height = 200
+    Align = alCustom
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Fim de Jogo'
+    Color = clWhite
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -165
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+    Visible = False
+  end
+  object PontuacaoNome: TLabel
+    Left = 24
+    Top = 481
+    Width = 142
+    Height = 33
+    Caption = 'Pontua'#231#227'o: '
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object PontuacaoValor: TLabel
+    Left = 162
+    Top = 481
+    Width = 8
+    Height = 33
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object StaticText1: TStaticText
+    Left = 680
+    Top = 481
+    Width = 289
+    Height = 144
+    Caption = 
+      'Use as setas do teclado para direcionar o Carro para direita e p' +
+      'ara a esquerda'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+  end
+  object Memo1: TMemo
+    Left = 240
+    Top = 481
+    Width = 185
+    Height = 89
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -27
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Lines.Strings = (
+      'Memo1')
+    ParentFont = False
+    TabOrder = 1
   end
   object ControleInimigo: TTimer
     Interval = 500
@@ -2711,12 +2789,13 @@ object FTelaInicial: TFTelaInicial
     Left = 24
   end
   object ControleDificuldade: TTimer
-    Interval = 10000
+    Interval = 5000
     OnTimer = ControleDificuldadeTimer
     Left = 112
   end
   object ControleJogo: TTimer
     Interval = 1
+    OnTimer = ControleJogoTimer
     Left = 192
   end
 end

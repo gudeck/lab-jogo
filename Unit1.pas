@@ -9,22 +9,6 @@ uses
   Vcl.Imaging.jpeg, Vcl.StdCtrls;
 
 type
-  TFTelaInicial = class(TForm)
-    ImagemFundo: TImage;
-    ControleInimigo: TTimer;
-    ControleDificuldade: TTimer;
-    ControleJogo: TTimer;
-    procedure FormCreate(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure ControleInimigoTimer(Sender: TObject);
-    procedure ControleDificuldadeTimer(Sender: TObject);
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
-type
   TCarro = interface
     procedure Mover(var Direcao: Word);
     procedure MoverEsquerda;
@@ -78,23 +62,46 @@ type
   public
     { Public declarations }
     procedure Mover(var Direcao: Word);
+
+    function IsColisao(Carro: TCarroJogavel): Boolean;
+    function IsSobrepostoVertical(Carro: TCarroJogavel): Boolean;
+    function IsSobrepostoHorizontal(Carro: TCarroJogavel): Boolean;
+  end;
+
+type
+  TFTelaInicial = class(TForm)
+    ImagemFundo: TImage;
+    ControleInimigo: TTimer;
+    ControleDificuldade: TTimer;
+    ControleJogo: TTimer;
+    FimJogo: TLabel;
+    PontuacaoNome: TLabel;
+    PontuacaoValor: TLabel;
+    StaticText1: TStaticText;
+    Memo1: TMemo;
+    procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ControleInimigoTimer(Sender: TObject);
+    procedure ControleDificuldadeTimer(Sender: TObject);
+    procedure ControleJogoTimer(Sender: TObject);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
   end;
 
 var
   FTelaInicial: TFTelaInicial;
   Carro: TCarroJogavel;
   CarroInimigo: TCarroInimigo;
-
-procedure VerificaColisao(CarroJogavel: TCarroJogavel;
-  CarroInimigo: TCarroInimigo);
+  Pontuacao: Integer;
 
 implementation
 
 {$R *.dfm}
 
 constructor TCarroJogavel.Create(ComponentePai: TForm);
-const
-  TAMANHO_BARRA_FERRAMENTAS = 50;
 begin
   inherited Create(ComponentePai);
   Parent := ComponentePai;
@@ -102,8 +109,12 @@ begin
   Width := 100;
   Height := 50;
 
-  Top := ComponentePai.Height - Height - TAMANHO_BARRA_FERRAMENTAS;
-  Left := Round((ComponentePai.Width - Width) / 2);
+  Top := FTelaInicial.ImagemFundo.Height - Height;
+  Left := Round((FTelaInicial.ImagemFundo.Width - Width) / 2);
+
+  Caption := 'Carro';
+  DoubleBuffered := true;
+  ParentBackground := false;
 
   VELOCIDADE := 5;
 end;
@@ -126,7 +137,7 @@ end;
 
 procedure TCarroJogavel.MoverDireita;
 begin
-  if (Left + VELOCIDADE + Width) <= Parent.Width then
+  if (Left + VELOCIDADE + Width) <= FTelaInicial.ImagemFundo.Width then
     Left := Left + VELOCIDADE;
 end;
 
@@ -143,8 +154,12 @@ begin
   Width := LARGURA_INICIAL;
   Height := ALTURA_INICIAL;
 
-  Top := Round((Parent.Height - Height) / 2);
-  Left := Round((Parent.Width - Width) / 2);
+  Top := Round((FTelaInicial.ImagemFundo.Height - Height) / 2);
+  Left := Round((FTelaInicial.ImagemFundo.Width - Width) / 2);
+
+  Caption := 'Carro Inimigo';
+  DoubleBuffered := true;
+  ParentBackground := false;
 
   DistanciaPercorrida := 0;
   if Random(2) = 1 then
@@ -162,13 +177,13 @@ end;
 
 procedure TCarroInimigo.Recolocar;
 begin
-  if (Top + Height) > Parent.Height then
+  if (Top + Height) > FTelaInicial.ImagemFundo.Height then
   begin
     Height := ALTURA_INICIAL;
     Width := LARGURA_INICIAL;
 
-    Left := Round((Parent.Width - Width) / 2);
-    Top := Round((Parent.Height - Height) / 2);
+    Left := Round((FTelaInicial.ImagemFundo.Width - Width) / 2);
+    Top := Round((FTelaInicial.ImagemFundo.Height - Height) / 2);
 
     VelocidadeHorizontal := VelocidadeAleatoria;
 
@@ -200,8 +215,8 @@ procedure TCarroInimigo.Crescer;
 begin
   if (DistanciaPercorrida mod 10 = 0) then
   begin
-    Width := Width + LARGURA_INICIAL;
-    Height := Height + ALTURA_INICIAL;
+    Width := Width + 6;
+    Height := Height + 3;
   end;
 end;
 
@@ -226,8 +241,13 @@ end;
 procedure TFTelaInicial.ControleDificuldadeTimer(Sender: TObject);
 begin
   Carro.VELOCIDADE := Carro.VELOCIDADE + 1;
-  if ControleInimigo.Interval - 50 >= 25 then
-    ControleInimigo.Interval := ControleInimigo.Interval - 50;
+  if ControleInimigo.Interval - 25 >= 25 then
+    ControleInimigo.Interval := ControleInimigo.Interval - 25
+  else
+  begin
+    ControleInimigo.Interval := 5;
+    ControleDificuldade.Enabled := false;
+  end;
 end;
 
 procedure TFTelaInicial.ControleInimigoTimer(Sender: TObject);
@@ -239,11 +259,69 @@ begin
   CarroInimigo.Recolocar;
 end;
 
-procedure VerificaColisao(CarroJogavel: TCarroJogavel;
-  CarroInimigo: TCarroInimigo);
+procedure TFTelaInicial.ControleJogoTimer(Sender: TObject);
 begin
-  if CarroJogavel.Top  then
-  
+  if CarroInimigo.IsColisao(Carro) then
+  begin
+    ControleInimigo.Enabled := false;
+    ControleDificuldade.Enabled := false;
+    ControleJogo.Enabled := false;
+    Carro.Enabled := false;
+    Carro.Visible := false;
+    CarroInimigo.Enabled := false;
+    CarroInimigo.Visible := false;
+    FTelaInicial.ImagemFundo.Visible := false;
+
+    FimJogo.Visible := true;
+
+  end;
+  Pontuacao := Pontuacao + Carro.VELOCIDADE;
+  PontuacaoValor.Caption := IntToStr(Pontuacao);
+end;
+
+function TCarroInimigo.IsColisao(Carro: TCarroJogavel): Boolean;
+begin
+  IsColisao := IsSobrepostoHorizontal(Carro) and IsSobrepostoVertical(Carro);
+end;
+
+function TCarroInimigo.IsSobrepostoVertical(Carro: TCarroJogavel): Boolean;
+var
+  LimiteEsquerdoCarroJogavel: Integer;
+  LimiteDireitoCarroJogavel: Integer;
+  LimiteEsquerdoCarroInimigo: Integer;
+  LimiteDireitoCarroInimigo: Integer;
+begin
+
+  LimiteEsquerdoCarroJogavel := Carro.Left;
+  LimiteDireitoCarroJogavel := Carro.Left + Carro.Width;
+  LimiteEsquerdoCarroInimigo := Left;
+  LimiteDireitoCarroInimigo := Left + Width;
+
+  IsSobrepostoVertical :=
+    ((LimiteEsquerdoCarroInimigo >= LimiteEsquerdoCarroJogavel) and
+    (LimiteEsquerdoCarroInimigo <= LimiteDireitoCarroJogavel)) or
+    ((LimiteDireitoCarroInimigo >= LimiteEsquerdoCarroJogavel) and
+    (LimiteDireitoCarroInimigo <= LimiteDireitoCarroJogavel));
+end;
+
+function TCarroInimigo.IsSobrepostoHorizontal(Carro: TCarroJogavel): Boolean;
+var
+  LimiteSuperiorCarroJogavel: Integer;
+  LimiteInferiorCarroJogavel: Integer;
+  LimiteSuperiorCarroInimigo: Integer;
+  LimiteInferiorCarroInimigo: Integer;
+begin
+
+  LimiteSuperiorCarroJogavel := Carro.Top;
+  LimiteInferiorCarroJogavel := Carro.Top + Carro.Height;
+  LimiteSuperiorCarroInimigo := Top;
+  LimiteInferiorCarroInimigo := Top + Height;
+
+  IsSobrepostoHorizontal :=
+    ((LimiteSuperiorCarroInimigo >= LimiteSuperiorCarroJogavel) and
+    (LimiteSuperiorCarroInimigo <= LimiteInferiorCarroJogavel)) or
+    ((LimiteInferiorCarroInimigo >= LimiteSuperiorCarroJogavel) and
+    (LimiteInferiorCarroInimigo <= LimiteInferiorCarroJogavel));
 end;
 
 end.
