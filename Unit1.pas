@@ -77,8 +77,8 @@ type
     FimJogo: TLabel;
     PontuacaoNome: TLabel;
     PontuacaoValor: TLabel;
-    Memo1: TMemo;
-    Memo2: TMemo;
+    InstrucoesJogo: TMemo;
+    InstrucoesControles: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ControleInimigoTimer(Sender: TObject);

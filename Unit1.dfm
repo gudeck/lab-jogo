@@ -2754,12 +2754,14 @@ object FTelaInicial: TFTelaInicial
     Font.Style = []
     ParentFont = False
   end
-  object Memo1: TMemo
+  object InstrucoesJogo: TMemo
     Left = 24
     Top = 520
     Width = 200
     Height = 120
+    TabStop = False
     Alignment = taCenter
+    Enabled = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -27
@@ -2770,14 +2772,17 @@ object FTelaInicial: TFTelaInicial
       'nos carros '
       'inimigos')
     ParentFont = False
+    ReadOnly = True
     TabOrder = 0
   end
-  object Memo2: TMemo
+  object InstrucoesControles: TMemo
     Left = 300
     Top = 520
     Width = 400
     Height = 120
+    TabStop = False
     Alignment = taCenter
+    Enabled = False
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -27
@@ -2788,6 +2793,7 @@ object FTelaInicial: TFTelaInicial
       'direcionar o Carro para direita e '
       'para a esquerda')
     ParentFont = False
+    ReadOnly = True
     TabOrder = 1
   end
   object ControleInimigo: TTimer
